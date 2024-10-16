@@ -17,7 +17,11 @@ abstract class BaseOverviewWidget<T extends BaseCubit> extends StatefulWidget {
   const BaseOverviewWidget({
     super.key,
   });
+
+  void onInit() {}
+
   Widget content(BuildContext context);
+
   @override
   State<BaseOverviewWidget<T>> createState() => _BaseOverviewWidgetState<T>();
 }
@@ -38,22 +42,24 @@ class _BaseOverviewWidgetState<T extends BaseCubit>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(
-        StyleConstants.defaultPadding,
-      ),
-      child: StateHandler<T>(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Icon(Icons.add),
-              ),
+      padding: const EdgeInsets.all(StyleConstants.defaultPadding),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: const Icon(Icons.add),
             ),
-            widget.content(context),
-          ],
-        ),
+          ),
+          Expanded(
+            child: StateHandler<T>(
+              child: widget.content(context),
+            ),
+          ),
+          // The fixed button
+
+        ],
       ),
     );
   }

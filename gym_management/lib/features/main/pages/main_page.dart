@@ -23,7 +23,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   void initState() {
     super.initState();
@@ -37,7 +36,6 @@ class _MainPageState extends State<MainPage> {
           create: (context) => LoginCubit(
             context.read<RouterCubit>(),
           ),
-
         ),
         BlocProvider<DashboardCubit>(
           create: (context) => DashboardCubit(),
@@ -69,6 +67,7 @@ class _MainPageState extends State<MainPage> {
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // We want this side menu only for large screen
         if (Responsive.isDesktop(context))
@@ -82,15 +81,7 @@ class _MainPageState extends State<MainPage> {
           flex: 5,
           child: Padding(
             padding: const EdgeInsets.all(StyleConstants.defaultPadding),
-            child: SingleChildScrollView(
-              controller: ScrollController(),
-              child: Column(
-                children: [
-                  const SizedBox(height: StyleConstants.defaultPadding),
-                  page.data.page
-                ],
-              ),
-            ),
+            child: page.data.page,
           ),
         ),
       ],

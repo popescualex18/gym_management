@@ -26,7 +26,6 @@ class _StateHandlerState<T extends Cubit> extends State<StateHandler<T>> {
   late final StreamSubscription subscription;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cubit = context.read<T>();
     subscription = cubit.stream.listen((_) {
@@ -52,16 +51,18 @@ class _StateHandlerState<T extends Cubit> extends State<StateHandler<T>> {
     if (state is BusyState) {
       return const BusyIndicatorWidget();
     }
-
+    var isActionState = state is ActionState;
     return Stack(
       children: [
         IgnorePointer(
-          ignoring: state is ActionState,
+          ignoring: isActionState,
           child: widget.child,
         ),
         Visibility(
-          visible: state is ActionState,
-          child: const BusyIndicatorWidget(),
+          visible: isActionState,
+          child: const Positioned.fill(
+            child: BusyIndicatorWidget(),
+          ),
         ),
       ],
     );
