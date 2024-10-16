@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'subscription_model.freezed.dart';
 part 'subscription_model.g.dart';
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class SubscriptionModel with _$SubscriptionModel {
   factory SubscriptionModel({
     required String id,
@@ -11,6 +11,11 @@ class SubscriptionModel with _$SubscriptionModel {
     required double price,
   }) = _SubscriptionModel;
 
+  static List<String> get columns {
+    return [
+      'id', 'name', 'price'
+    ];
+  }
   // Optional: Add support for JSON serialization
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
 }

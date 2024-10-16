@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/constants/core/shared_keys.dart';
 import 'package:gym_management/constants/core/state.dart';
+import 'package:gym_management/constants/ui/style_contstants.dart';
 import 'package:gym_management/utils/responsive.dart';
 import 'package:gym_management/widgets/state_handler.dart';
 
@@ -12,18 +13,17 @@ abstract class BaseCubit extends Cubit<BaseState> {
   void onDispose();
 }
 
-abstract class BaseWidget<T extends BaseCubit> extends StatefulWidget {
-  const BaseWidget({
+abstract class BaseOverviewWidget<T extends BaseCubit> extends StatefulWidget {
+  const BaseOverviewWidget({
     super.key,
   });
   Widget content(BuildContext context);
   @override
-  State<BaseWidget<T>> createState() => _BaseWidgetState<T>();
+  State<BaseOverviewWidget<T>> createState() => _BaseOverviewWidgetState<T>();
 }
 
-class _BaseWidgetState<T extends BaseCubit>
-    extends State<BaseWidget<T>> {
-
+class _BaseOverviewWidgetState<T extends BaseCubit>
+    extends State<BaseOverviewWidget<T>> {
   @override
   void initState() {
     context.read<T>().onInit();
@@ -32,26 +32,28 @@ class _BaseWidgetState<T extends BaseCubit>
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StateHandler<T>(
-      child: Responsive(
-        mobile: Row(
+    return Padding(
+      padding: const EdgeInsets.all(
+        StyleConstants.defaultPadding,
+      ),
+      child: StateHandler<T>(
+        child: Column(
           children: [
-            IconButton(
-              icon: const Icon(
-                Icons.menu,
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Icon(Icons.add),
               ),
-              onPressed: toggleMenu,
             ),
             widget.content(context),
           ],
         ),
-        desktop: widget.content(context),
       ),
     );
   }
