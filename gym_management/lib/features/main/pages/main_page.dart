@@ -78,18 +78,19 @@ class _MainPageState extends State<MainPage> {
       return const LoginPage();
     }
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Expanded(
-          // default flex = 1
-          // and it takes 1/6 part of the screen
-          child: SideMenuPage(),
+        Container(
+          constraints: BoxConstraints(
+            minWidth: 200,
+            maxWidth:MediaQuery.of(context).size.width * 0.2,
+          ),
+          height: MediaQuery.of(context).size.height,
+
+          child: const SideMenuPage(),
         ),
         Expanded(
-          flex: 5,
           child: page.data.page,
-        ),
+        )
       ],
     );
   }

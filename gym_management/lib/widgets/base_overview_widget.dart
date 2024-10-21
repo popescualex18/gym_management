@@ -32,6 +32,7 @@ abstract class BaseOverviewWidget<T extends BaseCubit> extends StatefulWidget {
 class _BaseOverviewWidgetState<T extends BaseCubit>
     extends State<BaseOverviewWidget<T>> {
   late final Widget? onAddWidget;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
@@ -41,13 +42,14 @@ class _BaseOverviewWidgetState<T extends BaseCubit>
       !(widget.showAddButton && onAddWidget == null),
       'showAddButton is true, but onAdd returns null',
     );
-
+    _scrollController = ScrollController();
     context.read<T>().onInit();
     super.initState();
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -64,9 +66,20 @@ class _BaseOverviewWidgetState<T extends BaseCubit>
               child: const Icon(Icons.add),
             ),
           ),
-          Flexible(
-            child: StateHandler<T>(
-              child: widget.content(context),
+          Expanded(
+            child: Scrollbar(
+              controller: _scrollController,
+              thumbVisibility: true,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: StateHandler<T>(
+                    child: widget.content(context),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

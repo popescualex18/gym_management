@@ -33,7 +33,7 @@ class CustomDataTable<T extends TableDisplay> {
       updatedColumns.add('actions');
     }
     for (int i = 0; i < updatedColumns.length; i++) {
-      _columnWidths[i] = const FlexColumnWidth();
+      _columnWidths[i] = const FlexColumnWidth(4);
     }
     return _columnWidths;
   }
