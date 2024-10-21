@@ -23,6 +23,9 @@ class DataState<T> extends BaseState {
 class EmptyState extends BaseState {
   const EmptyState();
 }
+class SuccessState extends BaseState {
+  const SuccessState();
+}
 
 class Void {
 

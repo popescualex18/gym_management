@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gym_management/constants/ui/style_contstants.dart';
-import 'package:gym_management/features/subscription/models/subscription_model.dart';
+import 'package:gym_management/core/table_display.dart';
 import 'package:gym_management/utils/data_table.dart';
 
-class CustomScrollableDataTable<T extends ToJson> extends StatelessWidget {
+class CustomScrollableTable<T extends TableDisplay> extends StatelessWidget {
   final List<T> data;
   final CustomDataTable<T> customDataTable;
-  const CustomScrollableDataTable({
+
+  const CustomScrollableTable({
     super.key,
     required this.data,
     required this.customDataTable,
@@ -16,49 +16,45 @@ class CustomScrollableDataTable<T extends ToJson> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: DataTable(
-            showBottomBorder: true,
-            columnSpacing: StyleConstants.defaultPadding,
-            columns: customDataTable.columnBuilder(
-              SubscriptionModel.columns,
-              context,
-              headingRowAlignment: MainAxisAlignment.center
-            ),
-            rows: const [], // No rows in the header, it's just for the columns
-          ),
-        ),
-        // Scrollable table body
+        _buildTableHeader(context),
         Expanded(
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: SizedBox(
-              width: double.infinity, // Keep width aligned with header
-              child: DataTable(
-                showBottomBorder: true,
-                headingRowHeight: 0,
-                columns: customDataTable.columnBuilder(
-                  SubscriptionModel.columns,
-                  context,
-                  headingRowAlignment: MainAxisAlignment.end
-                ),
-                rows: List.generate(
-                  data.length,
-                  (index) => _buildDataRows(data[index], context),
-                ),
-              ),
-            ),
+            child: _buildTableBody(context),
           ),
         ),
       ],
     );
   }
-  DataRow _buildDataRows(T data, BuildContext context) {
-    return customDataTable.rowBuilder(
-      context,
-      SubscriptionModel.columns,
-      data,
+
+  Widget _buildTableHeader(BuildContext context) {
+    return Table(
+      columnWidths: customDataTable.buildColumnWidths(),
+      children: [
+        TableRow(
+          children: customDataTable.buildHeaderCells(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTableBody(BuildContext context) {
+    return Table(
+      columnWidths: customDataTable.buildColumnWidths(),
+      children: List.generate(
+        data.length,
+        (index) => _buildDataRow(data[index], context),
+      ),
+    );
+  }
+
+  TableRow _buildDataRow(T item, BuildContext context) {
+    return TableRow(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[300]!),
+        ),
+      ),
+      children: customDataTable.rowBuilder(context, item),
     );
   }
 }

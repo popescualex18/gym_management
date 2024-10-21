@@ -8,7 +8,10 @@ import 'package:gym_management/features/dashboard/pages/dashboard_page.dart';
 import 'package:gym_management/features/login/business_logic/login_cubit.dart';
 import 'package:gym_management/features/login/pages/login_page.dart';
 import 'package:gym_management/features/side_menu/pages/side_menu_page.dart';
+import 'package:gym_management/features/subscription/business_service/manage_subscription_cubit.dart';
 import 'package:gym_management/features/subscription/business_service/subscription_cubit.dart';
+import 'package:gym_management/features/user/business_logic/manage_user_cubit.dart';
+import 'package:gym_management/features/user/business_logic/user_cubit.dart';
 import 'package:gym_management/main.dart';
 import 'package:gym_management/routing/pages.dart';
 import 'package:gym_management/routing/router.dart';
@@ -43,6 +46,15 @@ class _MainPageState extends State<MainPage> {
         BlocProvider<SubscriptionCubit>(
           create: (context) => SubscriptionCubit(),
         ),
+        BlocProvider<ManageUserCubit>(
+          create: (context) => ManageUserCubit(),
+        ),
+        BlocProvider<ManageSubscriptionCubit>(
+          create: (context) => ManageSubscriptionCubit(),
+        ),
+        BlocProvider<UserCubit>(
+          create: (context) => UserCubit(),
+        ),
       ],
       child: StateHandler<RouterCubit>(
         child: BlocConsumer<RouterCubit, BaseState>(
@@ -69,20 +81,14 @@ class _MainPageState extends State<MainPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // We want this side menu only for large screen
-        if (Responsive.isDesktop(context))
-          const Expanded(
-            // default flex = 1
-            // and it takes 1/6 part of the screen
-            child: SideMenuPage(),
-          ),
+        const Expanded(
+          // default flex = 1
+          // and it takes 1/6 part of the screen
+          child: SideMenuPage(),
+        ),
         Expanded(
-          // It takes 5/6 part of the screen
           flex: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(StyleConstants.defaultPadding),
-            child: page.data.page,
-          ),
+          child: page.data.page,
         ),
       ],
     );

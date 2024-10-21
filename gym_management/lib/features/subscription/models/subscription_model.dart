@@ -1,14 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gym_management/core/table_display.dart';
 
 part 'subscription_model.freezed.dart';
 part 'subscription_model.g.dart';
 
-abstract class ToJson {
-  Map<String, dynamic> toJson();
-}
+
 
 @Freezed(fromJson: true, toJson: true)
-class SubscriptionModel with _$SubscriptionModel implements ToJson{
+class SubscriptionModel with _$SubscriptionModel implements TableDisplay{
+  SubscriptionModel._();
   factory SubscriptionModel({
     required String id,
     required String name,
@@ -22,8 +22,9 @@ class SubscriptionModel with _$SubscriptionModel implements ToJson{
   }
   // Optional: Add support for JSON serialization
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
+
   @override
-  Map<String, dynamic> toJson() => toJson();
+  Map<String, dynamic> toTableData() => toJson();
 }
 List<SubscriptionModel> dummySubscriptions = List.generate(20, (index) {
   return SubscriptionModel(

@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/features/subscription/business_service/subscription_cubit.dart';
-import 'package:gym_management/features/subscription/models/subscription_model.dart';
-import 'package:gym_management/features/subscription/pages/manage_subscription_page.dart';
+import 'package:gym_management/features/user/business_logic/user_cubit.dart';
+import 'package:gym_management/features/user/models/user_model.dart';
+import 'package:gym_management/features/user/pages/manage_user_page.dart';
 import 'package:gym_management/utils/data_table.dart';
 import 'package:gym_management/utils/manage_entity_utils.dart';
 import 'package:gym_management/widgets/custom_scroll_data_table.dart';
 
-class SubscriptionWidget extends StatefulWidget {
-  const SubscriptionWidget({super.key});
+class UsersOverviewWidget extends StatefulWidget {
+  const UsersOverviewWidget({super.key});
 
   @override
-  State<SubscriptionWidget> createState() => _SubscriptionWidgetState();
+  State<UsersOverviewWidget> createState() => _UsersOverviewWidgetState();
 }
 
-class _SubscriptionWidgetState extends State<SubscriptionWidget> {
+class _UsersOverviewWidgetState extends State<UsersOverviewWidget> {
   late final CustomDataTable customDataTable;
-  late final SubscriptionCubit cubit;
+  late final SubscriptionCubit subscriptionCubit;
+  late final UserCubit userCubit;
 
   @override
   void initState() {
-    cubit = context.read<SubscriptionCubit>();
-    customDataTable = CustomDataTable<SubscriptionModel>(
-      columns: SubscriptionModel.columns,
+    subscriptionCubit = context.read<SubscriptionCubit>();
+    userCubit = context.read<UserCubit>();
+    customDataTable = CustomDataTable<UserModel>(
+      columns: UserModel.columns,
       addActionButtons: true,
-      delete: cubit.delete,
+      delete: userCubit.delete,
       view: (entity) async {
         await ManageEntityUtils.show(
           context,
-          ManageSubscriptionPage(
+          ManageUserPage(
             title: "View",
-            subscription: entity,
+            user: entity,
             viewMode: true,
           ),
         );
@@ -38,11 +41,11 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
       edit: (entity) async {
         await ManageEntityUtils.show(
           context,
-          ManageSubscriptionPage(
+          ManageUserPage(
             title: "Edit",
-            subscription: entity,
+            user: entity,
           ),
-          callback: cubit.onInit,
+          callback: userCubit.onInit,
         );
       },
     );
@@ -52,7 +55,7 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final data = context.watch<SubscriptionCubit>().data;
+    final data = context.watch<UserCubit>().data;
     return CustomScrollableTable(
       data: data,
       customDataTable: customDataTable,

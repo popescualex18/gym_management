@@ -15,19 +15,24 @@ class SideMenuPage extends StatelessWidget {
         child: Column(
           children: [
             DrawerHeader(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: StyleConstants.defaultPadding * 3,
-                    ),
-                   Expanded(child: UserAvatarLetterWidget(username: "Alex Popescu")),
-                    SizedBox(
-                      height:  StyleConstants.defaultPadding,
-                    ),
-                    Text("Alex Popescu", overflow: TextOverflow.ellipsis,)
-                  ],
-                )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: StyleConstants.defaultPadding * 3,
+                  ),
+                  Expanded(
+                      child: UserAvatarLetterWidget(username: "Alex Popescu")),
+                  SizedBox(
+                    height: StyleConstants.defaultPadding,
+                  ),
+                  Text(
+                    "Alex Popescu",
+                    overflow: TextOverflow.ellipsis,
+                  )
+                ],
+              ),
+            ),
             DrawerListTileWidget(
               title: "Dashboard",
               icon: Icons.dashboard,
@@ -37,6 +42,11 @@ class SideMenuPage extends StatelessWidget {
               title: "Subscriptions",
               icon: Icons.subscriptions,
               route: RoutesEnum.subscription,
+            ),
+            DrawerListTileWidget(
+              title: "Users",
+              icon: Icons.account_box,
+              route: RoutesEnum.user,
             ),
           ],
         ),

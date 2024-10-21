@@ -52,10 +52,7 @@ class MyApp extends StatelessWidget {
         ],
         child: Scaffold(
           key: SharedKeys.scaffoldKey,
-          drawer: const SideMenuPage(),
-          body: const SafeArea(
-            child: MainPage(),
-          ),
+          body: const MainPage(),
         ),
       ),
     );

@@ -118,9 +118,10 @@ class __$$SubscriptionModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SubscriptionModelImpl implements _SubscriptionModel {
+class _$SubscriptionModelImpl extends _SubscriptionModel {
   _$SubscriptionModelImpl(
-      {required this.id, required this.name, required this.price});
+      {required this.id, required this.name, required this.price})
+      : super._();
 
   factory _$SubscriptionModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SubscriptionModelImplFromJson(json);
@@ -166,11 +167,12 @@ class _$SubscriptionModelImpl implements _SubscriptionModel {
   }
 }
 
-abstract class _SubscriptionModel implements SubscriptionModel {
+abstract class _SubscriptionModel extends SubscriptionModel {
   factory _SubscriptionModel(
       {required final String id,
       required final String name,
       required final double price}) = _$SubscriptionModelImpl;
+  _SubscriptionModel._() : super._();
 
   factory _SubscriptionModel.fromJson(Map<String, dynamic> json) =
       _$SubscriptionModelImpl.fromJson;

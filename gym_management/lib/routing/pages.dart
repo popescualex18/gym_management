@@ -24,4 +24,5 @@ enum RoutesEnum {
   login,
   dashboard,
   subscription,
+  user,
 }

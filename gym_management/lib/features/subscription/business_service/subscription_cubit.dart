@@ -8,11 +8,6 @@ class SubscriptionCubit extends BaseCubit {
   List<SubscriptionModel> data = [];
 
   @override
-  void onDispose() {
-    emit(const EmptyState());
-  }
-
-  @override
   void onInit() {
     emit(const BusyState());
     Future.delayed(

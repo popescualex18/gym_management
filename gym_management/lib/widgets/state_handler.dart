@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gym_management/constants/core/state.dart';
-import 'package:gym_management/constants/ui/style_contstants.dart';
 import 'package:gym_management/widgets/busy_indicator_widget.dart';
-import 'package:gym_management/widgets/error_widget.dart';
 import 'package:gym_management/widgets/snack_bar_widget.dart';
 
 class StateHandler<T extends Cubit> extends StatefulWidget {
@@ -38,8 +35,16 @@ class _StateHandlerState<T extends Cubit> extends State<StateHandler<T>> {
     if (state is ErrorState) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget.build(
-          message: 'Your action was successful!',
+          message: state.message,
           type: SnackBarType.error,
+        ),
+      );
+    }
+    if (state is SuccessState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget.build(
+          message: 'Update successful!',
+          type: SnackBarType.success,
         ),
       );
     }

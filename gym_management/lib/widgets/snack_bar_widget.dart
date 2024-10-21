@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gym_management/constants/ui/style_contstants.dart';
 
 enum SnackBarType { success, info, error }
 
@@ -10,8 +9,10 @@ class SnackBarWidget {
   }) {
     return SnackBar(
       backgroundColor: _getSnackBarColor(type),
-      behavior: SnackBarBehavior.floating, // Makes it appear floating above the bottom bar
+      showCloseIcon: true,
+      behavior: SnackBarBehavior.floating,
       content: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Icon(
             _getSnackBarIcon(type),
@@ -52,5 +53,27 @@ class SnackBarWidget {
       default:
         return Icons.check_circle_outline;
     }
+  }
+
+  static void showRightSnackBar(
+      BuildContext context, String message, SnackBarType type) {
+    final snackBar = SnackBarWidget.build(
+      message: message,
+      type: type,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: snackBar.backgroundColor,
+        content: Transform.translate(
+          offset: const Offset(
+              150, 0), // Offset to the right (adjust this as needed)
+          child: snackBar.content,
+        ),
+        behavior: SnackBarBehavior.floating,
+        width: snackBar.width, // Same width as defined earlier
+        duration: snackBar.duration,
+      ),
+    );
   }
 }

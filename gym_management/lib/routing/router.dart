@@ -6,6 +6,7 @@ import 'package:gym_management/features/dashboard/pages/dashboard_page.dart';
 import 'package:gym_management/features/login/business_logic/login_cubit.dart';
 import 'package:gym_management/features/login/pages/login_page.dart';
 import 'package:gym_management/features/subscription/pages/subscription_page.dart';
+import 'package:gym_management/features/user/pages/users_overview_page.dart';
 import 'package:gym_management/routing/pages.dart';
 import 'package:gym_management/utils/unsaved_changes_helper.dart';
 
@@ -30,6 +31,10 @@ class RouterCubit extends Cubit<BaseState> {
       RoutesEnum.subscription: RouteSetting(
         route: RoutesEnum.subscription,
         page: const SubscriptionPage(),
+      ),
+      RoutesEnum.user: RouteSetting(
+        route: RoutesEnum.user,
+        page: const UsersOverviewPage(),
       )
     };
   }

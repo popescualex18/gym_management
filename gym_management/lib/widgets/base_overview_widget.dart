@@ -3,24 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_management/constants/core/shared_keys.dart';
 import 'package:gym_management/constants/core/state.dart';
 import 'package:gym_management/constants/ui/style_contstants.dart';
-import 'package:gym_management/utils/responsive.dart';
+import 'package:gym_management/utils/manage_entity_utils.dart';
 import 'package:gym_management/widgets/state_handler.dart';
 
 abstract class BaseCubit extends Cubit<BaseState> {
   BaseCubit(super.initialState);
 
   void onInit();
-  void onDispose();
+  void onDispose() {
+    emit(const EmptyState());
+  }
 }
 
 abstract class BaseOverviewWidget<T extends BaseCubit> extends StatefulWidget {
   const BaseOverviewWidget({
     super.key,
+    this.showAddButton = true,
   });
 
-  void onInit() {}
-
+  final bool showAddButton;
   Widget content(BuildContext context);
+  Widget? onAdd(BuildContext context) => null;
 
   @override
   State<BaseOverviewWidget<T>> createState() => _BaseOverviewWidgetState<T>();
@@ -28,8 +31,17 @@ abstract class BaseOverviewWidget<T extends BaseCubit> extends StatefulWidget {
 
 class _BaseOverviewWidgetState<T extends BaseCubit>
     extends State<BaseOverviewWidget<T>> {
+  late final Widget? onAddWidget;
+
   @override
   void initState() {
+    onAddWidget = widget.onAdd(context);
+
+    assert(
+      !(widget.showAddButton && onAddWidget == null),
+      'showAddButton is true, but onAdd returns null',
+    );
+
     context.read<T>().onInit();
     super.initState();
   }
@@ -52,13 +64,11 @@ class _BaseOverviewWidgetState<T extends BaseCubit>
               child: const Icon(Icons.add),
             ),
           ),
-          Expanded(
+          Flexible(
             child: StateHandler<T>(
               child: widget.content(context),
             ),
           ),
-          // The fixed button
-
         ],
       ),
     );

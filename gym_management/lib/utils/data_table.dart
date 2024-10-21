@@ -2,81 +2,88 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gym_management/constants/ui/style_contstants.dart';
-import 'package:gym_management/features/subscription/models/subscription_model.dart';
+import 'package:gym_management/core/table_display.dart';
 import 'package:gym_management/widgets/dialogs/delete_confirmation_dialog.dart';
 
-class CustomDataTable<T extends ToJson> {
+class CustomDataTable<T extends TableDisplay> {
   final bool addActionButtons;
+  final List<String> columns;
   final Future<void> Function(T entity)? delete;
   final Future<void> Function(T entity)? view;
-  final Map<String, DataCell> Function(T entity)? cellOverrides;
-  const CustomDataTable({
+  final Future<void> Function(T entity)? edit;
+  CustomDataTable({
+    required this.columns,
     this.addActionButtons = false,
     this.delete,
     this.view,
-    this.cellOverrides,
+    this.edit,
   }) : assert(
           !(addActionButtons && (delete == null || view == null)),
           'Both delete and view must be provided when addActionButtons is true',
         );
 
-  List<DataColumn> columnBuilder(
-    List<String> columns,
-    BuildContext context, {
-    MainAxisAlignment? headingRowAlignment,
-  }) {
-    final result = <DataColumn>[];
-    if (addActionButtons) {
-      columns = [...columns, 'actions'];
+  final Map<int, TableColumnWidth> _columnWidths = {};
+
+  Map<int, TableColumnWidth> buildColumnWidths() {
+    if(_columnWidths.isNotEmpty) {
+      return _columnWidths;
     }
-    for (var column in columns) {
+    final updatedColumns = [...columns];
+    if (addActionButtons) {
+      updatedColumns.add('actions');
+    }
+    for (int i = 0; i < updatedColumns.length; i++) {
+      _columnWidths[i] = const FlexColumnWidth();
+    }
+    return _columnWidths;
+  }
+
+  List<Widget> buildHeaderCells(
+    BuildContext context,
+  ) {
+    final result = <Widget>[];
+    final updatedColumns = [...columns];
+    if (addActionButtons) {
+      updatedColumns.add('actions');
+    }
+    for (var column in updatedColumns) {
       result.add(
-        DataColumn(
-          headingRowAlignment: headingRowAlignment,
-          label: Text(
-            column,
-          ),
-        ),
+        _buildCellText(column),
       );
     }
     return result;
   }
 
-  DataRow rowBuilder(BuildContext context, List<String> columns, T entity) {
-    final entityAsJson = entity.toJson();
-    final result = <DataCell>[];
-    Map<String, DataCell> cellOverrideWidgets;
-    if (cellOverrides != null) {
-      cellOverrideWidgets = cellOverrides!(entity);
-    } else {
-      cellOverrideWidgets = {};
-    }
+  Widget _buildCellText(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Center(
+        child: Text(
+          text,
+        ),
+      ),
+    );
+  }
+
+  List<Widget> rowBuilder(BuildContext context, T entity) {
+    final entityAsJson = entity.toTableData();
+    final result = <Widget>[];
 
     for (var column in columns) {
-      if (cellOverrideWidgets.containsKey(column)) {
-        result.add(cellOverrideWidgets[column]!);
-        continue;
-      }
+
       result.add(
-        DataCell(
-          Center(
-            child: Text(
-              entityAsJson[column]!.toString(),
-            ),
-          ),
-        ),
+        _buildCellText(entityAsJson[column]!.toString(),),
+
       );
     }
     if (addActionButtons) {
       result.add(_createActionButtons(context, entity));
     }
-    return DataRow(
-      cells: result,
-    );
+    return result;
   }
 
-  DataCell _createActionButtons(BuildContext context, T entity) {
-    return DataCell(
+  Widget _createActionButtons(BuildContext context, T entity) {
+    return
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -87,7 +94,23 @@ class CustomDataTable<T extends ToJson> {
                 color: StyleConstants.primaryColor,
               ),
             ),
-            onPressed: () {},
+            onPressed: () async {
+              await this.view!(entity);
+            },
+          ),
+          const SizedBox(
+            width: 6,
+          ),
+          TextButton(
+            child: const Text(
+              'Edit',
+              style: TextStyle(
+                color: StyleConstants.primaryColor,
+              ),
+            ),
+            onPressed: () async {
+              await this.edit!(entity);
+            },
           ),
           const SizedBox(
             width: 6,
@@ -105,8 +128,7 @@ class CustomDataTable<T extends ToJson> {
             // Delete
           ),
         ],
-      ),
-    );
+      );
   }
 
   void _showDeleteConfirmationDialog(
